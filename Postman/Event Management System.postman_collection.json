@@ -1,0 +1,1641 @@
+{
+	"info": {
+		"_postman_id": "f96586ee-60b9-4c2c-8363-5bebe74b075c",
+		"name": "Event Management System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41218809"
+	},
+	"item": [
+		{
+			"name": "Automation TestCases",
+			"item": [
+				{
+					"name": "USERS",
+					"item": [
+						{
+							"name": "User Registration",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//TestCase (1): Check if the request was successful (status code 201)\r",
+											"\r",
+											"pm.test(\"Status code is 201 (Created)\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"// TestCase (2): Check if the response contains a success message\r",
+											"\r",
+											"pm.test(\"Response contains a success message\", function(){\r",
+											"    const response = pm.response.json();\r",
+											"    pm.expect(response.message).to.include(\"successfully\");\r",
+											"})\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"username\": \"johndoe\",\r\n\"email\": \"john.doe@example.com\",\r\n\"password\": \"password123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/auth/register",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Exist User Reg",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//TestCase (1): Check if the request was successful (status code 404)\r",
+											"\r",
+											"pm.test(\"Status code is 400 (Not Found)\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"// TestCase (2): Handle errors \r",
+											"if (pm.response.code === 400) {\r",
+											"    pm.test(\"Error message is present\", function () {\r",
+											"        const response = pm.response.json();\r",
+											"        pm.expect(response.error).to.be.a(\"string\");\r",
+											"    });\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"username\": \"johndoe\",\r\n\"email\": \"john.doe@example.com\",\r\n\"password\": \"password123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/auth/register",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//TestCase (1): Check if the request was successful (status code 200)\r",
+											"\r",
+											"pm.test(\"Status code is 200 (OK)\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(200);\r",
+											"});\r",
+											"\r",
+											"// TestCase (2) : Check if the response contains a JWT token\r",
+											"\r",
+											"pm.test(\"Response contains a JWT token\", function(){\r",
+											"    const response = pm.response.json();\r",
+											"    pm.expect(response.token).to.be.a(\"string\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"// TestCase (3) : Log the response body to the console for debugging\r",
+											"\r",
+											"console.log(\"Response Body:\", pm.response.json());\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"email\": \"john.doe@example.com\",\r\n\"password\": \"password123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/auth/login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User Login (invalid)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//TestCase (1): Check if the response status code is 401 Unauthorized\r",
+											"pm.test(\"Status code is 401\", function () {\r",
+											"    pm.response.to.have.status(401);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"var jsonData = pm.response.json();\r",
+											"\r",
+											"//TestCase (2): Check if the response contains the error message\r",
+											"pm.test(\"Response has error message\", function () {\r",
+											"    pm.expect(jsonData.error).to.eql(\"Invalid email or password.\");\r",
+											"});\r",
+											"\r",
+											"//TestCase (3): Optionally, you can also check that the response does not contain a token\r",
+											"pm.test(\"Token should not be present\", function () {\r",
+											"    pm.expect(jsonData.token).to.be.undefined;\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"email\": \"john.doo@example.com\",\r\n\"password\": \"password122\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/auth/login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Admin Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//TestCase (1): Check if the request was successful (status code 200)\r",
+											"\r",
+											"pm.test(\"Status code is 200 (OK)\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(200);\r",
+											"});\r",
+											"\r",
+											"// TestCase (2) : Check if the response contains a JWT token\r",
+											"\r",
+											"pm.test(\"Response contains a JWT token\", function(){\r",
+											"    const response = pm.response.json();\r",
+											"    pm.expect(response.token).to.be.a(\"string\");\r",
+											"});\r",
+											"\r",
+											"// TestCsae (3) : Save the JWT token to an environment variable\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"if (response.token) {\r",
+											"    pm.environment.set(\"jwtToken\", response.token); \r",
+											"    pm.test(\"JWT token is saved to environment variable\", function () {\r",
+											"        pm.expect(pm.environment.get(\"jwtToken\")).to.be.a(\"string\");\r",
+											"        });\r",
+											"        } else {\r",
+											"    pm.test(\"No JWT token found in response\", function () {\r",
+											"        pm.expect(response.token).to.be.undefined;\r",
+											"    });\r",
+											"}\r",
+											"\r",
+											"// TestCase (4) : Log the response body to the console for debugging\r",
+											"\r",
+											"console.log(\"Response Body:\", pm.response.json());\r",
+											"\r",
+											"\r",
+											"// TestCase (5) : Handle errors (Invalid credentials)\r",
+											"\r",
+											"if (pm.response.code === 401) {\r",
+											"    pm.test(\"Error message is present\", function () {\r",
+											"        const response = pm.response.json();\r",
+											"        pm.expect(response.error).to.be.a(\"string\");\r",
+											"    });\r",
+											"\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"email\": \"admin@example.com\",\r\n\"password\": \"admin123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/auth/login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User Profile",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//TestCase (1): Check if the request was successful (status code 200)\r",
+											"\r",
+											"pm.test(\"Status code is 200 (OK)\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"//TestCase (2) : Check if the response is array\r",
+											"\r",
+											"pm.test(\"Respose is array of events\", function() {\r",
+											"    const response = pm.response.json();\r",
+											"    pm.expect(response).to.be.an(\"array\");\r",
+											"});\r",
+											"\r",
+											"// TestCase (3) : Validate the structure of each event in the response\r",
+											"\r",
+											"pm.test(\"Schema is correct\", function () {\r",
+											"    pm.response.to.have.jsonSchema({\r",
+											"        type: \"array\",\r",
+											"        items: {\r",
+											"            type: \"object\",\r",
+											"            properties: {\r",
+											"                id: { type: \"number\" },\r",
+											"                username: { type: \"string\" },\r",
+											"               email: { type: \"string\" },\r",
+											"                isAdmin: { type: \"boolen\" }\r",
+											"            },\r",
+											"            required: [\"id\", \"username\", \"email\", \"date\"]\r",
+											"        }\r",
+											"    });\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwtToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer{{jwtToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/users/profile",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"users",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "RSVP",
+					"item": [
+						{
+							"name": "RSVP to an Event",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwtToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": " Bearer{{jwtToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/events/:eventId/rsvps",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events",
+										":eventId",
+										"rsvps"
+									],
+									"variable": [
+										{
+											"key": "eventId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RSVP to an Event (Invalid)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//TestCase (1): Check if the request was successful (status code 404)\r",
+											"\r",
+											"pm.test(\"Status code is 404 (Not Found)\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"// TestCase (2): Handle event not found (404 Not Found)\r",
+											"if (pm.response.code === 404) {\r",
+											"    const response = pm.response.json();\r",
+											"    pm.test(\"Error message is present\", function () {\r",
+											"        pm.expect(response.error).to.be.a(\"string\");\r",
+											"        pm.expect(response.error).to.include(\"Event not found\");\r",
+											"    });\r",
+											"\r",
+											"    // Log the error message for debugging\r",
+											"    console.log(\"Error Response:\", response);\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwtToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer{{jwtToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/events/99/rsvps",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events",
+										"99",
+										"rsvps"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RSVPs for an Event",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"// Test 1: Check if the request was successful (status code 200)\r",
+											"pm.test(\"Status code is 200 (OK)\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwtToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer{{jwtToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/events/2/rsvps",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events",
+										"2",
+										"rsvps"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RSVPs for an Event (invalid)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//TestCase (1): Check if the response status code is 403 Forbidden\r",
+											"pm.test(\"Status code is 403\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
+											"});\r",
+											"\r",
+											"//TestCase (2): Check if the response contains the error message\r",
+											"pm.test(\"Response has error message\", function () {\r",
+											"    pm.expect(jsonData.error).to.eql(\"Admin access required.\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/events/2/rsvps",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events",
+										"2",
+										"rsvps"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "EVENTS",
+					"item": [
+						{
+							"name": "Get All Events",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//TestCase (1): Check if the request was successful (status code 200)\r",
+											"\r",
+											"pm.test(\"Status code is 200 (OK)\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"//TestCase (2) : Check if the response is array\r",
+											"\r",
+											"pm.test(\"Respose is array of events\", function() {\r",
+											"    const response = pm.response.json();\r",
+											"    pm.expect(response).to.be.an(\"array\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwtToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/events",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create an Event (Admin)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//TestCase (1): Check if the request was successful (status code 201)\r",
+											"\r",
+											"pm.test(\"Status code is 201 (Created)\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"// TestCase (2) : Validate the structure of each event in the response\r",
+											"\r",
+											"pm.test(\"Response has the correct schema\", function () {\r",
+											"    pm.response.to.have.jsonSchema({\r",
+											"            type: \"object\",\r",
+											"            properties: {\r",
+											"                id: { type: \"number\" },\r",
+											"                name: { type: \"string\" },\r",
+											"                description: { type: \"string\" },\r",
+											"                date: { type: \"string\" }\r",
+											"            },\r",
+											"            required: [\"id\", \"name\", \"description\", \"date\"]\r",
+											"            }) \r",
+											"    });\r",
+											"\r",
+											"    // TestCase (3) : Check if the Authorization header is present\r",
+											"\r",
+											"pm.test(\"Authorization header is present and contains a Bearer token\", function () {\r",
+											"    const authHeader = pm.request.headers.get(\"Authorization\");\r",
+											"    pm.expect(authHeader).to.be.a(\"string\");\r",
+											"    pm.expect(authHeader).to.include(\"Bearer\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwtToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer{{jwtToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"name\": \"Art Exhibition\",\r\n\"description\": \"An exhibition of contemporary art pieces.\",\r\n\"date\": \"2025-01-10\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/events",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create an Event (User)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//TestCase (1): Check if the response status code is 403 Forbidden\r",
+											"pm.test(\"Status code is 403\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"var jsonData = pm.response.json();\r",
+											"\r",
+											"//TestCase (2): Check if the response contains the error message\r",
+											"pm.test(\"Response has error message\", function () {\r",
+											"    pm.expect(jsonData.error).to.eql(\"Admin access required.\");\r",
+											"});\r",
+											"\r",
+											"//TestCase (3): Optionally, you can also check that the response does not contain event details\r",
+											"pm.test(\"Event details should not be present\", function () {\r",
+											"    pm.expect(jsonData.id).to.be.undefined;\r",
+											"    pm.expect(jsonData.name).to.be.undefined;\r",
+											"    pm.expect(jsonData.description).to.be.undefined;\r",
+											"    pm.expect(jsonData.date).to.be.undefined;\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE3Mzk2Mjk0MjAsImV4cCI6MTczOTYzMzAyMH0.w0rg8LEZ3hLM-1xHc7gDSfXqEkqmJm9D-0D-Nb0xflI",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "BearereyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE3Mzk2Mjk0MjAsImV4cCI6MTczOTYzMzAyMH0.w0rg8LEZ3hLM-1xHc7gDSfXqEkqmJm9D-0D-Nb0xflI",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"name\": \"Art Exhibition\",\r\n\"description\": \"An exhibition of contemporary art pieces.\",\r\n\"date\": \"2025-01-10\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/events",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Event",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// TestCase (1): Check if the request was successful (status code 200)\r",
+											"\r",
+											"\r",
+											"pm.test(\"Status code is 200 (OK)\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"// TestCase (2): Validate the response structure for a successful deletion\r",
+											"\r",
+											"if (pm.response.code === 200) {\r",
+											"    const response = pm.response.json();\r",
+											"    pm.test(\"Response contains the correct fields\", function () {\r",
+											"        pm.expect(response).to.have.all.keys(\"message\");\r",
+											"        pm.expect(response.message).to.be.a(\"string\");\r",
+											"        pm.expect(response.message).to.include(\"deleted successfully\");\r",
+											"    });\r",
+											"\r",
+											"    // Log the deletion confirmation for debugging\r",
+											"    console.log(\"Deletion Response:\", response);\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwtToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer{{jwtToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/events/11",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events",
+										"11"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Event (invalid)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"// TesCase (1): Handle event not found (404 Not Found)\r",
+											"\r",
+											"pm.test(\"Status code is 404 (Not Found)\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"// TestCase (2): Check if the Authorization header is present and valid\r",
+											"\r",
+											"if (pm.response.code === 404) {\r",
+											"    const response = pm.response.json();\r",
+											"    pm.test(\"Error message is present\", function () {\r",
+											"        pm.expect(response.error).to.be.a(\"string\");\r",
+											"        pm.expect(response.error).to.include(\"Event not found\");\r",
+											"    });\r",
+											"\r",
+											"    // Log the error message for debugging\r",
+											"    console.log(\"Error Response:\", response);\r",
+											"}\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwtToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer{{jwtToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/events/99",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events",
+										"99"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Manual TestCases",
+			"item": [
+				{
+					"name": "USERS",
+					"item": [
+						{
+							"name": "User Registration",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"username\": \"johnydoe\",\r\n\"email\": \"johny.doe@example.com\",\r\n\"password\": \"password123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/auth/register",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Exist User Reg",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"username\": \"johnydoe\",\r\n\"email\": \"johny.doe@example.com\",\r\n\"password\": \"password123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/auth/register",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"email\": \"johny.doe@example.com\",\r\n\"password\": \"password123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/auth/login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User Login (invalid)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//TestCase (1): Check if the response status code is 401 Unauthorized\r",
+											"pm.test(\"Status code is 401\", function () {\r",
+											"    pm.response.to.have.status(401);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"var jsonData = pm.response.json();\r",
+											"\r",
+											"//TestCase (2): Check if the response contains the error message\r",
+											"pm.test(\"Response has error message\", function () {\r",
+											"    pm.expect(jsonData.error).to.eql(\"Invalid email or password.\");\r",
+											"});\r",
+											"\r",
+											"//TestCase (3): Optionally, you can also check that the response does not contain a token\r",
+											"pm.test(\"Token should not be present\", function () {\r",
+											"    pm.expect(jsonData.token).to.be.undefined;\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"email\": \"john.doo@example.com\",\r\n\"password\": \"password122\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/auth/login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Admin Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"email\": \"admin@example.com\",\r\n\"password\": \"admin123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/auth/login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User Profile",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwtToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer{{jwtToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/users/profile",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"users",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "RSVP",
+					"item": [
+						{
+							"name": "RSVP to an Event",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwtToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": " Bearer{{jwtToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/events/:eventId/rsvps",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events",
+										":eventId",
+										"rsvps"
+									],
+									"variable": [
+										{
+											"key": "eventId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RSVP to an Event (Invalid)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwtToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer{{jwtToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/events/99/rsvps",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events",
+										"99",
+										"rsvps"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RSVPs for an Event",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwtToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer{{jwtToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/events/2/rsvps",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events",
+										"2",
+										"rsvps"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RSVPs for an Event (invalid)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/events/2/rsvps",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events",
+										"2",
+										"rsvps"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "EVENTS",
+					"item": [
+						{
+							"name": "Get All Events",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//TestCase (1): Check if the request was successful (status code 200)\r",
+											"\r",
+											"pm.test(\"Status code is 200 (OK)\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"//TestCase (2) : Check if the response is array\r",
+											"\r",
+											"pm.test(\"Respose is array of events\", function() {\r",
+											"    const response = pm.response.json();\r",
+											"    pm.expect(response).to.be.an(\"array\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwtToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/events",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create an Event (Admin)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwtToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer{{jwtToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"name\": \"Art Exhibition\",\r\n\"description\": \"An exhibition of contemporary art pieces.\",\r\n\"date\": \"2025-01-10\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/events",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create an Event (User)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE3Mzk2Mjk0MjAsImV4cCI6MTczOTYzMzAyMH0.w0rg8LEZ3hLM-1xHc7gDSfXqEkqmJm9D-0D-Nb0xflI",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "BearereyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE3Mzk2Mjk0MjAsImV4cCI6MTczOTYzMzAyMH0.w0rg8LEZ3hLM-1xHc7gDSfXqEkqmJm9D-0D-Nb0xflI",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"name\": \"Art Exhibition\",\r\n\"description\": \"An exhibition of contemporary art pieces.\",\r\n\"date\": \"2025-01-10\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/events",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Event",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwtToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer{{jwtToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/events/11",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events",
+										"11"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Event (invalid)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwtToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer{{jwtToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/events/99",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"events",
+										"99"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

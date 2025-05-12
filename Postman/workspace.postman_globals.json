@@ -1,0 +1,21 @@
+{
+	"id": "09e73029-af55-41db-801b-ffaec2e17d42",
+	"values": [
+		{
+			"key": "url",
+			"value": "http://localhost:5000/api",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "jwtToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlzQWRtaW4iOnRydWUsImlhdCI6MTc0MDI0MjE1NSwiZXhwIjoxNzQwMjQ1NzU1fQ.aBWBv9OO7aCTJMhIQnvntUCM-9U1PBtaoULHrb0S1Gk",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"name": "Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2025-02-22T17:20:56.365Z",
+	"_postman_exported_using": "Postman/11.33.3"
+}
